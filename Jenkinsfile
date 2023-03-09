@@ -46,6 +46,16 @@ pipeline {
         }
       }
     }
+    stage('Checkov') {
+        steps {
+            checkout([$class: 'GitSCM', branches: [[name: 'master']], userRemoteConfigs: [[url: 'https://github.com/alvarolopez12/tf-cicd']]])
+            script { 
+                sh """pipenv install
+                pipenv run pip install bridgecrew
+                pipenv run bridgecrew --directory . --bc-api-key 69a43622-8d7a-48e1-b3d2-92efe6f10dc6 --repo-id alvarolopez12/tf-cicd"""
+            }
+        }
+    }
     stage('Terraform Action') {
       steps {
         script {
